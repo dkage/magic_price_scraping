@@ -53,14 +53,28 @@ card_data["img"] = image
 
 # Card details frame div
 card_details_frame = soup.find("div", {"class": "card-detalhes"}).find("div")
-
 card_details = card_details_frame.findAll("p")
-# imagecost = [x['src'] for x in card_details.findAll('img')]
+
+# print(card_details)
+# for lines in card_details:
+    
+
 
 # Grabs price for each edition
+card_eds = soup.find("div", {"class": "card-detalhes"}).find("table")
+eds_string = ''
+for lines in card_eds:
+    eds_string = eds_string + str(lines)
 
-# print (card_details_frame.text)
-for lines in card_details:
-    print(lines)
-    print("\n\n\n")
-# print (card_data)
+# Grabs name from each edition
+eds_names = re.findall(' title="(.*?)"', eds_string)
+
+# Removes day variation data
+items = []
+for item in eds_names:
+    if item.startswith('Variação de preço'):
+        items.append(item)
+eds = [x for x in eds_names if x not in items]
+# print('==============')
+# print(eds)
+
