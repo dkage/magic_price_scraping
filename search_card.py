@@ -13,13 +13,13 @@ def get_card(card_name):
     request = requests.get(search_url)
     return request.text
 
-# Creates empty dictionary
+# Creates empty dictionary that will contain all card info
 card_data = {}
 
 # Capture Search Word and append to dictionary
 search_words = "wrath of god"
 card_data["search_words"] = search_words
-card_data["url_liga"] = "LigaMagic:" + card_url(search_words)
+card_data["url_liga"] = "LigaMagic:" + card_url(search_words).replace(' ','%20')
 
 
 # ------CARD FOUND ------
