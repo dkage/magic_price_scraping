@@ -1,0 +1,6 @@
+# API Token file
+api_key.py
+
+# Cache and PyCharm
+.idea/
+__pycache__/
