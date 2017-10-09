@@ -103,6 +103,7 @@ def get_card_info(search_words):
     return card_data
 
 
+# Generates a string containing all information to be printed
 def message_layout(card_data):
     message = ''
     message += card_data['img'][0] + '\n'
