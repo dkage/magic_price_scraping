@@ -1,10 +1,14 @@
 from bs4 import BeautifulSoup
+from beautifultable import BeautifulTable
 import requests
 import re
+import urllib.parse
 
 
 def card_url(card_name):
-    url = "https://www.ligamagic.com.br/?view=cards%2Fsearch&btSubmit=btSubmit&card=" + card_name
+    parameter = {'card': card_name}
+    parameter = urllib.parse.urlencode(parameter)
+    url = "https://www.ligamagic.com.br/?view=cards%2Fsearch&btSubmit=btSubmit&" + parameter
     return url
 
 
@@ -21,7 +25,7 @@ def get_card_info(search_words):
 
     # Capture Search Word and append to dictionary
     card_data["search_words"] = search_words
-    card_data["url_liga"] = "LigaMagic:" + card_url(search_words).replace(' ', '%20')
+    card_data["url_liga"] = card_url(search_words)
 
     # TODO create an exception in case card is not found
 
@@ -97,3 +101,27 @@ def get_card_info(search_words):
     card_data["prices"] = eds_with_prices  # Adds price list to dictionary
 
     return card_data
+
+
+def message_layout(card_data):
+    message = ''
+    message += card_data['img'][0] + '\n'
+    message += 'Nome: ' + card_data['name_pt'] + '\n'
+    message += 'Nome US: ' + card_data['name_us'] + '\n'
+    message += 'Raridade: ' + card_data['Raridade'] + '\n'
+    message += 'Cor: ' + card_data['Cor'] + '\n'
+    message += 'Tipo: ' + card_data['Tipo'] + '\n'
+    message += 'CMC: ' + card_data['CMC'] + '\n'
+    message += 'Artista: ' + card_data['Artista'] + '\n'
+    message += 'Formatos válidos: ' + card_data['FormatosVálidos'].replace(',', ', ') + '\n'
+    message += 'Link na LigaMagic: ' + card_data['url_liga']
+    table = BeautifulTable()
+    table.column_headers = ['Edição', 'Menor', 'Médio', 'Maior']
+    for price in card_data['prices']:
+        ed = price.split('@')[0]
+        values = price.split('@')[1].split(';')
+        table.append_row([ed, values[0], values[1], values[2]])
+    message += '\n' + str(table)
+    message += '\n\nsearch words used: ' + card_data['search_words'] + '\n'
+
+    return message

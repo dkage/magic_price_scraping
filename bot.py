@@ -4,6 +4,7 @@ import time
 
 def main():
     last_update_id = None
+
     while True:
         updates_json = bot_functions.get_updates(last_update_id)
         if len(updates_json['result']) > 0:
