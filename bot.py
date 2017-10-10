@@ -17,7 +17,7 @@ def main():
                     bot.send_message(data, chat_id)
                 else:
                     reply = mtg.message_layout(data)
-                    bot.send_message(reply, chat_id)
+                    print(bot.send_message(reply, chat_id))
         time.sleep(0.5)
 
 

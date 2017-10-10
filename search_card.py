@@ -118,7 +118,8 @@ def message_layout(card_data):
     message += '*Tipo:* _' + card_data['Tipo'] + '_\n'
     if 'CMC' in card_data:
         message += '*CMC:* _' + str(card_data['CMC']) + '_\n'
-    message += '*Formatos válidos:* _' + card_data['FormatosVálidos'].replace(',', ', ') + '_\n'
+    if 'FormatosVálidos' in card_data:
+        message += '*Formatos válidos:* _' + card_data['FormatosVálidos'].replace(',', ', ') + '_\n'
     message += '```\n======================' + '\n'
     message += 'Edição \n Mínimo | Médio | Máximo' + '\n'
     message += '---------------------------' + '\n'

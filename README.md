@@ -1,4 +1,5 @@
-# magic_price_scraping
+# Magic The Gathering Scraping Prices
+
 
 ```
 $ sudo pip3 install bs4
