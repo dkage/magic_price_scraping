@@ -131,8 +131,8 @@ def message_layout(card_data):
 
     message += '```'
     message += 'Link da imagem: ' + card_data['img'][0] + '\n'
-    message += 'Link na LigaMagic: ' + card_data['url_liga']
-    message += '\n\n``` search words used: ' + card_data['search_words'] + '```\n'
+    message += 'Link na LigaMagic: ' + card_data['url_liga'] + '\n'
+    message += '```\nsearch words used: ' + card_data['search_words'] + '```\n'
     message += '*Artista:* _' + card_data['Artista'] + '_\n'
 
     return message
