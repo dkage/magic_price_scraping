@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-from beautifultable import BeautifulTable
 import requests
 import re
 import urllib.parse
@@ -8,13 +7,14 @@ import urllib.parse
 def card_url(card_name):
     parameter = {'card': card_name}
     parameter = urllib.parse.urlencode(parameter)
-    url = "https://www.ligamagic.com.br/?view=cards%2Fsearch&btSubmit=btSubmit&" + parameter
+    url = "https://www.ligamagic.com.br/?view=cards/card&" + parameter
     return url
 
 
 def get_card(card_name):
     search_url = card_url(card_name)
     request = requests.get(search_url)
+    # print(search_url)
     return request.text
 
 
@@ -27,8 +27,6 @@ def get_card_info(search_words):
     card_data["search_words"] = search_words
     card_data["url_liga"] = card_url(search_words)
 
-    # TODO create an exception in case card is not found
-
     # Gets text through LigaMagic web request
     soup = BeautifulSoup(get_card(search_words), "lxml")
 
@@ -36,8 +34,15 @@ def get_card_info(search_words):
     card_frame = soup.find("div", {"class": "card"})
 
     # Grabs card name pt and eng
-    name_pt = card_frame.find("h3", {"class": "titulo-card b"}).text
-    name_us = card_frame.find("p", {"class": "subtitulo-card"}).text
+    # noinspection PyBroadException
+    try:
+        name_pt = card_frame.find("h3", {"class": "titulo-card b"}).text
+    except AttributeError:
+        return 'Card not found!'
+    try:
+        name_us = card_frame.find("p", {"class": "subtitulo-card"}).text
+    except AttributeError:
+        return 'Card not found!'
     card_data["name_pt"] = name_pt  # Add portuguese card name to dictionary
     card_data["name_us"] = name_us  # Add original card name to dictionary
 
@@ -106,23 +111,28 @@ def get_card_info(search_words):
 # Generates a string containing all information to be printed
 def message_layout(card_data):
     message = ''
-    message += card_data['img'][0] + '\n'
-    message += 'Nome: ' + card_data['name_pt'] + '\n'
-    message += 'Nome US: ' + card_data['name_us'] + '\n'
-    message += 'Raridade: ' + card_data['Raridade'] + '\n'
-    message += 'Cor: ' + card_data['Cor'] + '\n'
-    message += 'Tipo: ' + card_data['Tipo'] + '\n'
-    message += 'CMC: ' + card_data['CMC'] + '\n'
-    message += 'Artista: ' + card_data['Artista'] + '\n'
-    message += 'Formatos válidos: ' + card_data['FormatosVálidos'].replace(',', ', ') + '\n'
-    message += 'Link na LigaMagic: ' + card_data['url_liga']
-    table = BeautifulTable()
-    table.column_headers = ['Edição', 'Menor', 'Médio', 'Maior']
+    message += '*Nome:* _' + card_data['name_pt'] + '_\n'
+    message += '*Nome US:* _' + card_data['name_us'] + '_\n'
+    message += '*Raridade:* _' + card_data['Raridade'] + '_\n'
+    message += '*Cor:* _' + card_data['Cor'] + '_\n'
+    message += '*Tipo:* _' + card_data['Tipo'] + '_\n'
+    if 'CMC' in card_data:
+        message += '*CMC:* _' + str(card_data['CMC']) + '_\n'
+    message += '*Formatos válidos:* _' + card_data['FormatosVálidos'].replace(',', ', ') + '_\n'
+    message += '```\n======================' + '\n'
+    message += 'Edição \n Mínimo | Médio | Máximo' + '\n'
+    message += '---------------------------' + '\n'
     for price in card_data['prices']:
+        # Ed = Edition | Min = values[0] | Med = values[1] | Max = values[2]
         ed = price.split('@')[0]
         values = price.split('@')[1].split(';')
-        table.append_row([ed, values[0], values[1], values[2]])
-    message += '\n' + str(table)
-    message += '\n\nsearch words used: ' + card_data['search_words'] + '\n'
+        message += ed + '\n' + values[0] + ' | ' + values[1] + ' | ' + values[2] + '\n'
+        message += '---------------------------' + '\n'
+
+    message += '```'
+    message += 'Link da imagem: ' + card_data['img'][0] + '\n'
+    message += 'Link na LigaMagic: ' + card_data['url_liga']
+    message += '\n\n``` search words used: ' + card_data['search_words'] + '```\n'
+    message += '*Artista:* _' + card_data['Artista'] + '_\n'
 
     return message

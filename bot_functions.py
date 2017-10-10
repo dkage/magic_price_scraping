@@ -36,8 +36,9 @@ def get_updates(offset=None):
 # Sends message | receives as parameter the text to be sent and the chat_id | also parses text to url format
 def send_message(message_text, chat_id):
     parsed_message = urllib.parse.quote_plus(message_text)
-    url = url_base + "sendMessage?text={}&chat_id={}".format(parsed_message, chat_id)
-    http_request(url)
+    url = url_base + "sendMessage?text={}&chat_id={}&parse_mode={}".format(parsed_message, chat_id, 'Markdown')
+    response = http_request(url)
+    return response
 
 
 # Returns the highest id number, so it can be sent as offset later in get_updates() function

@@ -2,6 +2,7 @@ import bot_functions as bot
 import time
 import search_card as mtg
 
+
 def main():
     last_update_id = None
 
@@ -12,15 +13,13 @@ def main():
             for update in updates_json['result']:
                 text, chat_id = bot.get_chat_info(update)
                 data = mtg.get_card_info(text)
-                reply = mtg.message_layout(data)
-                bot.send_message(reply, chat_id)
-                # print(chat_id)
-                # print('end of this chat')
-                # print('\n')
+                if data == 'Card not found!':
+                    bot.send_message(data, chat_id)
+                else:
+                    reply = mtg.message_layout(data)
+                    bot.send_message(reply, chat_id)
         time.sleep(0.5)
 
 
 if __name__ == '__main__':
     main()
-
-
