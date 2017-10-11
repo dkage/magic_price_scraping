@@ -2,6 +2,7 @@ from api_key import TOKEN
 import json
 import requests
 import urllib.parse
+import time
 
 url_base = "https://api.telegram.org/bot{}/".format(TOKEN)
 
@@ -37,18 +38,17 @@ def get_updates(offset=None):
 # If it is bigger it splits the message in a list
 def max_size_checker(parsed_message):
     list_of_messages = []
-    print(len(parsed_message))
     if len(parsed_message) > 4096:
         for i in range(4096, 0, -1):
-            # if parsed_message[i] == '\n':
             if (parsed_message[i] == 'A') and (parsed_message[i - 1] == '0') and (parsed_message[i - 2] == '%'):
                 list_of_messages.append(parsed_message[0:i-2])
-                list_of_messages.append(parsed_message[i+1:])
-                if len(list_of_messages[1]) > 4096:
-                    list_of_messages.append(max_size_checker(list_of_messages[1]))
+                new = parsed_message[i+1:]
+                if len(new) > 4096:
+                    list_of_messages = list_of_messages + max_size_checker(new)
+                else:
+                    list_of_messages.append(new)
                 break
     if list_of_messages:
-        print(list_of_messages)
         return list_of_messages
     return parsed_message
 
@@ -58,11 +58,11 @@ def send_message(message_text, chat_id):
     response = None
     parsed_message = urllib.parse.quote_plus(message_text)
     checked_message = max_size_checker(parsed_message)
-    print(checked_message)
     if type(checked_message) is list:
         for element in checked_message:
             url = url_base + "sendMessage?text={}&chat_id={}&parse_mode={}".format(element, chat_id, 'Markdown')
             response = http_request(url)
+            time.sleep(0.5)
     else:
         url = url_base + "sendMessage?text={}&chat_id={}&parse_mode={}".format(checked_message, chat_id, 'Markdown')
         response = http_request(url)
