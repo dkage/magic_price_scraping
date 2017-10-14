@@ -41,8 +41,8 @@ def max_size_checker(parsed_message):
     if len(parsed_message) > 4096:
         for i in range(4096, 0, -1):
             if (parsed_message[i] == 'A') and (parsed_message[i - 1] == '0') and (parsed_message[i - 2] == '%'):
-                list_of_messages.append(parsed_message[0:i-2])
-                new = parsed_message[i+1:]
+                list_of_messages.append(parsed_message[0:i-2].replace('%60', ''))
+                new = parsed_message[i+1:].replace('%60', '')
                 if len(new) > 4096:
                     list_of_messages = list_of_messages + max_size_checker(new)
                 else:
