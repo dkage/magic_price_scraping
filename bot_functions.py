@@ -40,8 +40,17 @@ def max_size_checker(parsed_message):
     list_of_messages = []
     if len(parsed_message) > 4096:
         for i in range(4096, 0, -1):
+            # If message is bigger than 4096, then it starts from the last index to the first, searching a pattern
+            # of %0A, that is an \n in UTF-8. That way it doesn't break a message in the middle of a sentence or word
             if (parsed_message[i] == 'A') and (parsed_message[i - 1] == '0') and (parsed_message[i - 2] == '%'):
-                list_of_messages.append(parsed_message[0:i-2].replace('%60', ''))
+                if len(parsed_message[0:i-2]) < 4093:
+                    list_of_messages.append(parsed_message[0:i-2] + '```')
+                else:
+                    list_of_messages.append(parsed_message[0:i-2].replace('%60', ''))
+                # if len(parsed_message[i+1:]) < 4090:
+                #     print(len(parsed_message[i+1:]))
+                #     new = '```' + parsed_message[i + 1:] + '```'
+                # else:
                 new = parsed_message[i+1:].replace('%60', '')
                 if len(new) > 4096:
                     list_of_messages = list_of_messages + max_size_checker(new)
