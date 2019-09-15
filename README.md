@@ -1,6 +1,9 @@
 # Magic The Gathering Scraping Prices
 
-[Após atualização do ligamagic este scrapper não funciona mais, armazenado para historico apenas]
+*[This script no longer works due to new updates on LigaMagic, no longer loading the whole price table on page load and instead is using JavaScript. Needs complete rework #TODO]*
+
+This is a little program for web scrapping the prices from Magic: The Gathering cards from LigaMagic website. 
+It uses a Telegram bot as input, where you type the name of the card, and if the program finds it it returns card info.
 
 ```
 $ sudo pip3 install bs4
