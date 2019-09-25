@@ -12,5 +12,5 @@ $ yaourt lxml (parsing)
 ```
 
 
-![Imagem01] (https://raw.githubusercontent.com/dkage/readme_imgs/master/magic_price_scraping/mtg_01.png)
-![Imagem02] (https://raw.githubusercontent.com/dkage/readme_imgs/master/magic_price_scraping/mtg_02.png)
+![Imagem01](https://raw.githubusercontent.com/dkage/readme_imgs/master/magic_price_scraping/mtg_01.png)
+![Imagem02](https://raw.githubusercontent.com/dkage/readme_imgs/master/magic_price_scraping/mtg_02.png)
