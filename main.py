@@ -1,10 +1,13 @@
 from tbot import Telegram
-
+from time import sleep
 
 def main():
-    print(Telegram.get_me())
+    return True
 
 
 if __name__ == '__main__':
     bot = Telegram()
-    bot.get_me()
+    while not bot.get_me():
+        print('Bot is offline for some reason, error during get_me checkup.')
+        sleep(20)
+    print('Bot ok')
