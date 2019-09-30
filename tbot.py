@@ -3,6 +3,7 @@ from api_key import TELEGRAM_KEY
 import json
 
 
+# TODO create try exception function for to call on each request get
 class Telegram:
 
     def __init__(self):
@@ -26,7 +27,11 @@ class Telegram:
         else:
             return False
 
-    def send_message(self):
+    def send_message(self, message, chat_id):
+        http_response = requests.get(self.url + "sendMessage?text={}&chat_id={}".format(message, chat_id))
+        print(http_response)
+        print(type(http_response))
+
         return True
 
     def get_updates(self):
